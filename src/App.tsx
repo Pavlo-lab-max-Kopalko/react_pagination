@@ -55,15 +55,13 @@ export const App: React.FC = () => {
 
       {/* Move this markup to Pagination */}
 
-      <ul>
-        <Pagination
-          perPage={Number(perItems)} // number of items per page
-          currentPage={Number(
-            numberPage.slice(1),
-          )} /* optional with 1 by default */
-          onPageChange={page => setNumberPage(page)}
-        />
-      </ul>
+      <Pagination
+        perPage={Number(perItems)} // number of items per page
+        currentPage={Number(
+          numberPage.slice(1),
+        )} /* optional with 1 by default */
+        onPageChange={page => setNumberPage(page)}
+      />
     </div>
   );
 };
