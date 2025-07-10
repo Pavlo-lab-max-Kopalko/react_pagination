@@ -8,7 +8,7 @@ import { Pagination } from './components/Pagination';
 export const items = getNumbers(1, 42).map(n => `Item ${n}`);
 
 export const App: React.FC = () => {
-  const [perItems, setPerItems] = useState<string>('3');
+  const [perItems, setPerItems] = useState<string>('5');
   const [numberPage, setNumberPage] = useState<string>('#1');
 
   const getNumber = (number: string) => {
@@ -25,6 +25,18 @@ export const App: React.FC = () => {
     setNumberPage(arrAddres[arrAddres.length - 1]);
   };
 
+  const turnRight = () => {
+    const newNumberPage = Number(`${numberPage.slice(1)}`) + 1;
+
+    setNumberPage(`#${newNumberPage}`);
+  };
+
+  const turnLeft = () => {
+    const newNumberPage = Number(`${numberPage.slice(1)}`) - 1;
+
+    setNumberPage(`#${newNumberPage}`);
+  };
+
   const pageQuantity = Math.ceil(items.length / +perItems);
 
   const passedItems =
@@ -35,7 +47,7 @@ export const App: React.FC = () => {
       <h1>Items with Pagination</h1>
 
       <p className="lead" data-cy="info">
-        Page {numberPage} (items {passedItems + 1} -{' '}
+        Page {numberPage.slice(1)} (items {passedItems + 1} -{' '}
         {Number(perItems) + passedItems} of 42)
       </p>
 
@@ -45,6 +57,7 @@ export const App: React.FC = () => {
             data-cy="perPageSelector"
             id="perPageSelector"
             className="form-control"
+            defaultValue={'5'}
             onClick={event => getNumber(event.currentTarget.value)}
             onChange={() => resetNumberPage()}
           >
@@ -63,12 +76,13 @@ export const App: React.FC = () => {
       {/* Move this markup to Pagination */}
 
       <ul className="pagination">
-        <li className="page-item disabled">
+        <li className={`page-item ${numberPage === '#1' ? 'disabled' : ''}`}>
           <a
             data-cy="prevLink"
             className="page-link"
             href="#prev"
-            aria-disabled="true"
+            aria-disabled={numberPage === '#1' ? 'true' : 'false'}
+            onClick={() => turnLeft()}
           >
             «
           </a>
@@ -92,12 +106,15 @@ export const App: React.FC = () => {
           );
         })}
 
-        <li className="page-item">
+        <li
+          className={`page-item ${numberPage === `#${pageQuantity}` ? 'disabled' : ''}`}
+        >
           <a
             data-cy="nextLink"
             className="page-link"
             href="#next"
-            aria-disabled="false"
+            aria-disabled={numberPage === `#${pageQuantity}` ? 'true' : 'false'}
+            onClick={() => turnRight()}
           >
             »
           </a>
@@ -105,14 +122,10 @@ export const App: React.FC = () => {
       </ul>
       <ul>
         <Pagination
-          total={42} // total number of items to paginate
           perPage={Number(perItems)} // number of items per page
           currentPage={Number(
             numberPage.slice(1),
           )} /* optional with 1 by default */
-          onPageChange={(page: { addEventListener: () => void }) => {
-            page.addEventListener();
-          }}
         />
       </ul>
     </div>
