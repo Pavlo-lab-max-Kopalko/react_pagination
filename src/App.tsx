@@ -19,26 +19,6 @@ export const App: React.FC = () => {
     setNumberPage('#1');
   };
 
-  const getNumberPage = (addres: string) => {
-    const arrAddres = addres.split('/');
-
-    setNumberPage(arrAddres[arrAddres.length - 1]);
-  };
-
-  const turnRight = () => {
-    const newNumberPage = Number(`${numberPage.slice(1)}`) + 1;
-
-    setNumberPage(`#${newNumberPage}`);
-  };
-
-  const turnLeft = () => {
-    const newNumberPage = Number(`${numberPage.slice(1)}`) - 1;
-
-    setNumberPage(`#${newNumberPage}`);
-  };
-
-  const pageQuantity = Math.ceil(items.length / +perItems);
-
   const passedItems =
     Number(perItems) * Number(numberPage.slice(1)) - Number(perItems);
 
@@ -75,57 +55,13 @@ export const App: React.FC = () => {
 
       {/* Move this markup to Pagination */}
 
-      <ul className="pagination">
-        <li className={`page-item ${numberPage === '#1' ? 'disabled' : ''}`}>
-          <a
-            data-cy="prevLink"
-            className="page-link"
-            href="#prev"
-            aria-disabled={numberPage === '#1' ? 'true' : 'false'}
-            onClick={() => turnLeft()}
-          >
-            «
-          </a>
-        </li>
-
-        {Array.from({ length: pageQuantity }).map((_, i) => {
-          return (
-            <li
-              key={i}
-              className={`page-item ${numberPage === `#${i + 1}` ? 'active' : ''}`}
-            >
-              <a
-                data-cy="pageLink"
-                className="page-link"
-                href={`#${i + 1}`}
-                onClick={event => getNumberPage(event.currentTarget.href)}
-              >
-                {i + 1}
-              </a>
-            </li>
-          );
-        })}
-
-        <li
-          className={`page-item ${numberPage === `#${pageQuantity}` ? 'disabled' : ''}`}
-        >
-          <a
-            data-cy="nextLink"
-            className="page-link"
-            href="#next"
-            aria-disabled={numberPage === `#${pageQuantity}` ? 'true' : 'false'}
-            onClick={() => turnRight()}
-          >
-            »
-          </a>
-        </li>
-      </ul>
       <ul>
         <Pagination
           perPage={Number(perItems)} // number of items per page
           currentPage={Number(
             numberPage.slice(1),
           )} /* optional with 1 by default */
+          onPageChange={page => setNumberPage(page)}
         />
       </ul>
     </div>
